@@ -57,3 +57,65 @@ def extrair_telefone_com_ia(texto_site, url):
 
     except Exception as e:
         return f"Erro na IA: {e}"
+    
+
+def processar_sites():
+    # Verifica se o arquivo de entrada existe
+    if not os.path.exists(INPUT_FILE):
+        print(f"Erro: Arquivo '{INPUT_FILE}' não encontrado.")
+        return
+
+    # Lê os sites
+    with open(INPUT_FILE, 'r', encoding='utf-8') as file:
+        sites = [line.strip() for line in file.readlines() if line.strip()]
+
+    print(f"Iniciando extração de {len(sites)} sites...")
+
+    # Prepara o arquivo de saída
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as file_out:
+        file_out.write("URL;Telefone Extraido\n")
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+
+    for site in sites:
+        url_alvo = site if site.startswith('http') else f'https://{site}'
+
+        print(f"Processando: {url_alvo}...", end="\r")
+
+        try:
+            # 1. Baixar o site
+            response = requests.get(
+                url_alvo,
+                headers=headers,
+                timeout=15
+            )
+            response.raise_for_status()
+
+            # 2. Limpar o HTML
+            texto_limpo = limpar_html(response.content)
+
+            # 3. Usar IA para extrair
+            telefone = extrair_telefone_com_ia(
+                texto_limpo,
+                url_alvo
+            )
+
+            print(f"[OK] {url_alvo} -> {telefone}")
+
+            # Salvar no arquivo
+            with open(OUTPUT_FILE, 'a', encoding='utf-8') as file_out:
+                file_out.write(f"{url_alvo};{telefone}\n")
+
+        except requests.exceptions.RequestException as e:
+            print(f"[ERRO DE CONEXÃO] {url_alvo}: {e}")
+
+            with open(OUTPUT_FILE, 'a', encoding='utf-8') as file_out:
+                file_out.write(f"{url_alvo};Erro de acesso ao site\n")
+
+        except Exception as e:
+            print(f"[ERRO GERAL] {url_alvo}: {e}")
+
+            with open(OUTPUT_FILE, 'a', encoding='utf-8') as file_out:
+                file_out.write(f"{url_alvo};Erro desconhecido\n")
