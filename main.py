@@ -30,3 +30,30 @@ def limpar_html(html_content):
             element.extract()
 
     return soup
+
+def extrair_telefone_com_ia(texto_site, url):
+    """
+    Envia o texto do site para a OpenAI identificar o telefone.
+    """
+    prompt_sistema = (
+        "Você é um assistente especialista em extração de dados. "
+        "Sua tarefa é encontrar o número de telefone principal de contato comercial no código HTML fornecido de um site. "
+        "Se houver vários, prefira celulares (WhatsApp) ou fixos locais. Pesquise dentro dos links (parâmetros href das tags a do html se existe um numero de telefone também, ele pode estar em um parâmetro no link chamado phone= ou algo parecido)"
+        "Retorne APENAS o número formatado. Se não encontrar, retorne 'Não encontrado'."
+    )
+
+    prompt_usuario = f"URL do site: {url}\n\nConteúdo do site:\n{texto_site}\n\nExtraia o telefone:"
+
+    try:
+        response = client.chat.completions.create(
+            model=MODELO,
+            messages=[
+                {"role": "system", "content": prompt_sistema},
+                {"role": "user", "content": prompt_usuario}
+            ],
+        )
+
+        return response.choices[0].message.content.strip()
+
+    except Exception as e:
+        return f"Erro na IA: {e}"
