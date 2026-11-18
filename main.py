@@ -119,3 +119,7 @@ def processar_sites():
 
             with open(OUTPUT_FILE, 'a', encoding='utf-8') as file_out:
                 file_out.write(f"{url_alvo};Erro desconhecido\n")
+        
+        
+if __name__ == "__main__":
+    processar_sites()
