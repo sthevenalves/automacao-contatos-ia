@@ -1,5 +1,13 @@
 # Automação de Extração de Telefones com IA
 
+
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![Requests](https://img.shields.io/badge/Requests-HTTP-2CA5E0)
+![BeautifulSoup](https://img.shields.io/badge/BeautifulSoup-Web%20Scraping-4B8BBE)
+![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai&logoColor=white)
+![CSV](https://img.shields.io/badge/CSV-Data%20Export-217346?logo=microsoftexcel&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 Projeto desenvolvido em Python para automatizar a coleta de números de telefone de contato em sites, combinando **web scraping** com **inteligência artificial (OpenAI)** para identificar informações relevantes no conteúdo das páginas.
 
 ## Sobre o projeto
